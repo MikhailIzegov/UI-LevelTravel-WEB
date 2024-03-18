@@ -8,9 +8,9 @@ from dotenv import load_dotenv
 # from tests import attach
 
 
-@pytest.fixture(scope='session', autouse=True)
-def load_env():
-    load_dotenv()
+# @pytest.fixture(scope='session', autouse=True)
+# def load_env():
+#     load_dotenv()
 
 
 # @pytest.fixture(scope="function", autouse=False)

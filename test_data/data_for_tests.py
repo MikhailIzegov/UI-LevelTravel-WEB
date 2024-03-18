@@ -1,5 +1,13 @@
 import os
 import dataclasses
+from dotenv import load_dotenv
+
+
+def load_env():
+    load_dotenv()
+
+
+load_env()
 
 
 @dataclasses.dataclass

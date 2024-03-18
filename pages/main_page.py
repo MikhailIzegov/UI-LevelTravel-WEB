@@ -30,7 +30,8 @@ class MainPage:
         self.choose_hotels_section()
         self.set_number_of_tourists()
         self.choose_destination(test_user.destination)
-        self.click_find_btn()
+        time.sleep(5)
+        # self.click_find_btn()
 
 
     def choose_hotels_section(self):
@@ -47,6 +48,10 @@ class MainPage:
 
     def choose_destination(self, destination):
         browser.element('[class=lt-destination-picker__input]').type(destination)
+        (browser.all('[class*=lt-destination-picker__option]').
+         element_by('[class*=styles__LabelText]').should(have.exact_text('Турция'))).click()
+
+
 
     def click_find_btn(self):
         browser.element('[type="submit"]').click()
