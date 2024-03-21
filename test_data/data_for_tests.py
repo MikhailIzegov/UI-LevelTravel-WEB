@@ -18,6 +18,8 @@ class User:
     email: str
     password: str
     destination: str
+    start_date: str
+    end_date: str
 
 
 test_user = User(
@@ -26,7 +28,9 @@ test_user = User(
         phone_number='0000',
         email=os.getenv('LOGIN'),
         password=os.getenv('PASSWORD'),
-        destination='Турция'
+        destination='Турция',
+        start_date='001',
+        end_date='028'
         )
 
 # class DataForTests:

@@ -10,6 +10,8 @@ class MainPage:
     def open_page(self):
         browser.open('https://level.travel')
         browser.driver.maximize_window()
+        if browser.element('[data-testid=cookies-banner]'):
+            browser.element('[data-testid=cookies-banner]').perform(command.js.remove)
 
     def open_auth_model_window(self):
         (browser.all('[class*=HeaderMenuCategory__CategoryName]').element_by
@@ -26,13 +28,13 @@ class MainPage:
         self.unfold_tourists()
         self.decrease_tourists_number()
 
-    def find_hotels(self):
+    def find_available_hotels(self):
         self.choose_hotels_section()
         self.set_number_of_tourists()
         self.choose_destination(test_user.destination)
-        time.sleep(5)
-        # self.click_find_btn()
-
+        self.set_start_date(test_user.start_date)
+        self.set_end_date(test_user.end_date)
+        self.click_find_btn()
 
     def choose_hotels_section(self):
         browser.element('[value=hotel]').element('[type=button]').click()
@@ -48,15 +50,20 @@ class MainPage:
 
     def choose_destination(self, destination):
         browser.element('[class=lt-destination-picker__input]').type(destination)
-        (browser.all('[class*=lt-destination-picker__option]').
-         element_by('[class*=styles__LabelText]').should(have.exact_text('Турция'))).click()
+        (browser.element('[class*=lt-destination-picker__menu]').
+         element('[class*=styles__LabelText]').should(have.exact_text('Турция'))).click()
+        browser.driver.implicitly_wait(2)
 
+    def set_start_date(self, start_date):
+        browser.element('#start').click()
+        # browser.element('[class*=Footer__StyledFooter]').perform(command.js.scroll_into_view)
+        browser.element(f'[class*=datepicker__day--{start_date}][aria-disabled=false]').click()
+        browser.element('#start').element('[class*=DurationTrip]').should(have.text(start_date.replace('0', '')))
 
+    def set_end_date(self, end_date):
+        browser.element('#end').click()
+        browser.element(f'[class*=datepicker__day--{end_date}][aria-disabled=false]').click()
+        browser.element('#end').element('[class*=DurationTrip]').should(have.text(end_date.replace('0', '')))
 
     def click_find_btn(self):
         browser.element('[type="submit"]').click()
-
-
-
-
-

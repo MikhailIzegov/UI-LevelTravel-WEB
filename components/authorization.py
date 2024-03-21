@@ -12,7 +12,7 @@ class Authorization:
         browser.element('#password').send_keys(password).press_enter()
 
     def is_logged_in(self):
-        browser.element('[class*=CashBackContainer]').should(be.visible)
+        browser.element('[class*=CashBackContainer]').with_(timeout=10).should(be.visible)
 
 
 auth = Authorization()
