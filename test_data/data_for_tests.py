@@ -20,6 +20,7 @@ class User:
     destination: str
     start_date: str
     end_date: str
+    stars: str
 
 
 test_user = User(
@@ -30,7 +31,8 @@ test_user = User(
         password=os.getenv('PASSWORD'),
         destination='Турция',
         start_date='001',
-        end_date='028'
+        end_date='028',
+        stars='5'
         )
 
 # class DataForTests:
