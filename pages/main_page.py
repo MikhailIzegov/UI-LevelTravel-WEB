@@ -29,8 +29,8 @@ class MainPage:
         self.decrease_tourists_number()
 
     def find_available_hotels(self):
-        self.choose_hotels_section()
         self.set_number_of_tourists()
+        self.choose_hotels_section()
         self.choose_destination(test_user.destination)
         self.set_start_date(test_user.start_date)
         self.set_end_date(test_user.end_date)
@@ -49,10 +49,22 @@ class MainPage:
         browser.element('[class*=CounterPluralize] > [type=button]:nth-of-type(2)').click()
 
     def choose_destination(self, destination):
-        browser.element('[class=lt-destination-picker__input]').type(destination)
-        (browser.element('[class*=lt-destination-picker__menu]').
-         element('[class*=styles__LabelText]').should(have.exact_text('Турция'))).click()
-        browser.driver.implicitly_wait(2)
+        # browser.element('[class=lt-destination-picker__input]').type(destination)
+        # if browser.element('[class=lt-destination-picker__popularDirections]'):
+        browser.element('[class=lt-destination-picker__input]').click()
+        (browser.element('.lt-destination-picker__option[id*=option-3-0]').
+         element('[class*=styles__LabelText]').should(have.text(destination)).click())
+
+        # (browser.element('[class=lt-destination-picker__popularDirections]').
+        #  element('.lt-destination-picker__option[id*=option-3-0]').click())
+
+        # if browser.element('[class=lt-destination-picker__menu-list]'):
+        #     (browser.element('.lt-destination-picker__option[id*=option-1-0]').
+        #      element('[class*=styles__LabelText]').should(have.exact_text(destination))).click()
+
+        # (browser.element('[class*=lt-destination-picker__menu]').
+        #  element('[class*=styles__LabelText]').should(have.value(destination)))
+        # browser.all('.lt-destination-picker').element_by('[id*=option-1-0]').click()
 
     def set_start_date(self, start_date):
         browser.element('#start').click()

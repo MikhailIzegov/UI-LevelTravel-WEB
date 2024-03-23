@@ -21,21 +21,43 @@ class HotelsPage:
         self.hotel_type()
         self.set_facilities()
 
-
     def close_login_modal_window(self):
         # browser.switch_to.frame(browser.element("#fl-716178"))
         # Используем find_elements и проверяем, что список найденных элементов не пуст
-        if browser.driver.find_elements(By.CSS_SELECTOR, "#fl-716178"):
+        # if browser.driver.find_element(By.CSS_SELECTOR, "#fl-716178"):
+
+        if browser.element("#fl-716178").should(be.visible):
             browser.driver.switch_to.frame(browser.driver.find_element(By.CSS_SELECTOR, "#fl-716178"))
             browser.element('.close[type=button]').click()
             browser.switch_to.default_content()
         else:
             pass
 
+
+        # if browser.element("#fl-716178").with_(timeout=10):
+        #     browser.driver.switch_to.frame(browser.driver.find_element(By.CSS_SELECTOR, "#fl-716178"))
+        #     browser.element('.close[type=button]').click()
+        #     browser.switch_to.default_content()
+        # else:
+        #     pass
+
+
     def set_stars(self, stars):
         browser.element(f'#\\3{stars}[type=checkbox]').perform(command.js.scroll_into_view)
         browser.element(f'#\\3{stars}[type=checkbox]').click()
-        time.sleep(5)
+
+        # Находим все карточки отелей
+        all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent] [itemprop=ratingValue]')
+
+        # Проверяем, что у всех найденных отелей есть искомое кол-во звезд,
+        # чтобы впоследствии получить кол-во таких отелей
+        hotels_according_to_number_of_stars = all_given_hotels.filtered_by(have.attribute('content', stars))
+
+        # Сравниваем
+        all_given_hotels.should(have.size(len(hotels_according_to_number_of_stars)))
+
+    def set_rating(self):
+        pass
 
 
 
