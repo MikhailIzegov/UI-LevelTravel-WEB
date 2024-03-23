@@ -43,18 +43,18 @@ class HotelsPage:
 
 
     def set_stars(self, stars):
-        browser.element(f'#\\3{stars}[type=checkbox]').perform(command.js.scroll_into_view)
+        # browser.element(f'#\\3{stars}[type=checkbox]').perform(command.js.scroll_into_view)
         browser.element(f'#\\3{stars}[type=checkbox]').click()
 
         # Находим все карточки отелей
-        all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent] [itemprop=ratingValue]')
+        all_given_options = browser.all('[class*=HotelCard__StyledHotelOfferCardContent] [itemprop=ratingValue]')
 
         # Проверяем, что у всех найденных отелей есть искомое кол-во звезд,
         # чтобы впоследствии получить кол-во таких отелей
-        hotels_according_to_number_of_stars = all_given_hotels.filtered_by(have.attribute('content', stars))
+        options_with_attribute = all_given_options.filtered_by(have.attribute('content', stars))
 
         # Сравниваем
-        all_given_hotels.should(have.size(len(hotels_according_to_number_of_stars)))
+        all_given_options.should(have.size(len(options_with_attribute)))
 
     def set_rating(self):
         pass
