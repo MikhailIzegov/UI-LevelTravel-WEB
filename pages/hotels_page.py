@@ -16,7 +16,7 @@ class HotelsPage:
         self.close_login_modal_window()
         self.set_confirmability()
         self.set_stars(test_user.stars)
-        self.set_rating()
+        self.set_rating(test_user.rating)
         self.set_distance_to_the_sea()
         self.set_budget()
         self.set_beach_type()
@@ -68,8 +68,18 @@ class HotelsPage:
         # Сравниваем
         all_given_hotels.should(have.size(len(options_with_attribute)))
 
-    def set_rating(self):
-        pass
+    def set_rating(self, rating):
+        do.scroll_to('.filter-meals')
+        browser.all('[class*=SwitcherItem]').element_by(have.exact_text(rating + '+')).click()
+        all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
+        all_given_ratings = browser.all('[class*=HotelRating]')
+        all_given_hotels.should(have.size(len(all_given_ratings)))
+
+        # Проверка, что рейтинг каждого отеля >= указанного рейтинга
+        for rating in all_given_ratings:
+            # Получаем value у элемента и преобразуем в float, чтобы проверить
+            value = float(rating.get_attribute('value'))
+            assert value >= float(rating), f'Рейтинг отеля {value} меньше указанного: {rating}'
 
 
 

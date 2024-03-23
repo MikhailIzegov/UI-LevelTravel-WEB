@@ -21,6 +21,7 @@ class User:
     start_date: str
     end_date: str
     stars: str
+    rating: str
 
 
 test_user = User(
@@ -32,7 +33,8 @@ test_user = User(
         destination='Дубай',
         start_date='001',
         end_date='028',
-        stars='5'
+        stars='5',
+        rating='9'
         )
 
 # class DataForTests:
