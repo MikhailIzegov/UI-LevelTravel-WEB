@@ -4,6 +4,7 @@ from selene import browser, have, be, command
 from selenium.webdriver.common.by import By
 
 from test_data.data_for_tests import test_user
+from utils.additional_actions import do
 
 
 class HotelsPage:
@@ -44,6 +45,7 @@ class HotelsPage:
 
     def set_stars(self, stars):
         # browser.element(f'#\\3{stars}[type=checkbox]').perform(command.js.scroll_into_view)
+        do.scroll_to('[class*=FilterCancellationPolicy__StyledLabelIcon]')
         browser.element(f'#\\3{stars}[type=checkbox]').click()
 
         # Находим все карточки отелей
