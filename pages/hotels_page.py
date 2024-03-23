@@ -14,6 +14,7 @@ class HotelsPage:
 
     def set_filters(self):
         self.close_login_modal_window()
+        self.set_confirmability()
         self.set_stars(test_user.stars)
         self.set_rating()
         self.set_distance_to_the_sea()
@@ -43,20 +44,29 @@ class HotelsPage:
         #     pass
 
 
+    def set_confirmability(self):
+        (browser.element('#filter-confirmability').element(f'#\\31[class*=MultiToggleSwitch]').
+         with_(timeout=8).click())
+        all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
+        hotels_with_instant_confirmation = (
+            all_given_hotels.all('[class*=HotelCard__StyledHotelOfferCardContent] [class*=InstantConfirmIcon]'))
+        all_given_hotels.should(have.size(len(hotels_with_instant_confirmation)))
+
+
     def set_stars(self, stars):
         # browser.element(f'#\\3{stars}[type=checkbox]').perform(command.js.scroll_into_view)
         do.scroll_to('[class*=FilterCancellationPolicy__StyledLabelIcon]')
         browser.element(f'#\\3{stars}[type=checkbox]').click()
 
         # Находим все карточки отелей
-        all_given_options = browser.all('[class*=HotelCard__StyledHotelOfferCardContent] [itemprop=ratingValue]')
+        all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent] [itemprop=ratingValue]')
 
         # Проверяем, что у всех найденных отелей есть искомое кол-во звезд,
         # чтобы впоследствии получить кол-во таких отелей
-        options_with_attribute = all_given_options.filtered_by(have.attribute('content', stars))
+        options_with_attribute = all_given_hotels.filtered_by(have.attribute('content', stars))
 
         # Сравниваем
-        all_given_options.should(have.size(len(options_with_attribute)))
+        all_given_hotels.should(have.size(len(options_with_attribute)))
 
     def set_rating(self):
         pass
