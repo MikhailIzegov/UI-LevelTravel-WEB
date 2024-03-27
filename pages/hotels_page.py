@@ -1,6 +1,6 @@
 import time
 
-from selene import browser, have, be, command
+from selene import browser, have, be, command, query
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 
@@ -72,14 +72,14 @@ class HotelsPage:
         do.scroll_to('.filter-meals')
         browser.all('[class*=SwitcherItem]').element_by(have.exact_text(rating + '+')).click()
         all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
-        all_given_ratings = all_given_hotels.all('[class*=HotelRating]').should(be.visible)
+        all_given_ratings = all_given_hotels.all('[class*=HotelRating]')
 
         all_given_hotels.should(have.size(len(all_given_ratings)))
 
         # Проверка, что рейтинг каждого отеля >= указанного рейтинга
-        for hotel_rating in all_given_ratings:
+        for i in range(len(all_given_ratings)):
             # Получаем value у элемента и преобразуем в float, чтобы проверить
-            value = float(hotel_rating.get_attribute('value'))
+            value = float(all_given_ratings[i].get(query.value))
             print(value)
             assert value >= float(rating), f'Рейтинг отеля {value} меньше указанного: {rating}'
 
