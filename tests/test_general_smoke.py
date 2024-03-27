@@ -12,5 +12,5 @@ def test_smoke_hotel():
     app.hotels_page.close_login_modal_window()
     app.hotels_page.set_confirmability()
     app.hotels_page.set_stars('5')
-    # app.hotels_page.set_rating('9')
+    # app.hotels_page.set_rating('9')  # убрать цикл, пофиксить метод
     app.hotels_page.set_regions(['Бар Дубай', 'Джебель-Али'])

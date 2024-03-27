@@ -72,8 +72,8 @@ class HotelsPage:
         do.scroll_to('.filter-meals')
         browser.all('[class*=SwitcherItem]').element_by(have.exact_text(rating + '+')).click()
         all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
-        all_given_ratings = browser.all('[class*=HotelRating]').should(have.texts('Дубай' or 'Турция'))
-        print(all_given_ratings)
+        all_given_ratings = all_given_hotels.all('[class*=HotelRating]').should(be.visible)
+
         all_given_hotels.should(have.size(len(all_given_ratings)))
 
         # Проверка, что рейтинг каждого отеля >= указанного рейтинга
@@ -87,31 +87,12 @@ class HotelsPage:
         do.scroll_to('[class*=FilterLine__FilterDiv]')
         browser.element('[type=checkbox]#\\31 09028').click()
         browser.element('[type=checkbox]#\\31 09030').click()
-        # all_given_regions = (browser.all('[class*=HotelCard__StyledHotelOfferCardContent]').
-        #                      all('[itemprop=addressRegion]'))
-        all_given_regions = '[class*=HotelCard__StyledHotelOfferCardContent] [itemprop=addressRegion]'
-
-        self.check_element_with_text_from_list(all_given_regions, regions)
-
-    def check_element_with_text_from_list(self, locator: str, texts: list):
-        for text in texts:
-            try:
-                browser.all(locator).should(have.text(text))
-                print(f"Элемент с текстом '{text}' найден и виден.")
-                return  # Если элемент найден, завершаем функцию
-            except TimeoutException:
-                continue  # Если элемент не найден, пробуем следующий текст
-        # Если ни один элемент не найден, выбрасываем исключение
-        raise AssertionError(f"Ни один из элементов с текстами {texts} не найден.")
+        all_given_regions = (browser.all('[class*=HotelCard__StyledHotelOfferCardContent]').
+                             all('[itemprop=addressRegion]'))
+        all_given_regions.should(have.text(regions[0]).or_(have.text(regions[1])).each)
 
 
-
-
-
-        # for region in all_given_regions:
-        #     text_value_of_region = region.text
-        #     if not any(valid_location in text_value_of_region for valid_location in regions):
-        #         raise AssertionError(f"Найденный текст '{text_value_of_region}' не соответствует выбранному фильтру")
+    # def set_budget(self):
 
 
 
