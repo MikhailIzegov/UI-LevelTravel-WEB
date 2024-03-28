@@ -18,8 +18,8 @@ class HotelsPage:
         self.set_confirmability()
         self.set_stars(test_user.stars)
         self.set_rating(test_user.rating)
-        self.set_regions(test_user.regions)
         self.set_budget_from(test_user.budget_from)
+        self.set_regions(test_user.regions)
         self.open_hotel_card()
 
     def close_login_modal_window(self):
@@ -87,6 +87,15 @@ class HotelsPage:
             value = float(all_given_ratings[i].get(query.value))
             assert value >= float(rating), f'Рейтинг отеля {value} меньше указанного: {rating}'
 
+    def set_budget_from(self, budget_from):
+        browser.all('input[class*=PriceFilterInput]').first.type(budget_from).press_enter()
+        all_given_prices = browser.all('[itemprop=priceRange]')
+
+        for i in range(len(all_given_prices)):
+            text_value = all_given_prices[i].get(query.text)
+            value = do.leave_only_digits(text_value)
+            assert value >= int(budget_from), f'Бюджет отеля {value} меньше указанного: {budget_from}'
+
     def set_regions(self, regions):
         do.scroll_to('[class*=FilterLine__FilterDiv]')
         browser.element('[type=checkbox]#\\31 09028').click()
@@ -100,22 +109,23 @@ class HotelsPage:
         number_2 = int(do.extract_number_of_hotels(do.extract_text(region_2)))
         summ = number_1 + number_2
 
+        browser.element('[class*=HotelCounter]').should(have.text(str(summ)))
+
+        '''
+        Либо можно прописать "неждущий" в отличие от селеновского .should ассёрт:
+        assert summ == self.get_total_hotels_according_to_filters(), ('Кол-во результатов согласно фильтру не совпадает'
+                                                                      ' с кол-вом найденных отелей')
+        '''
+
         all_given_regions = (browser.all('[class*=HotelCard__StyledHotelOfferCardContent]').
                              all('[itemprop=addressRegion]'))
         all_given_regions[:summ-1].should(have.text(regions[0]).or_(have.text(regions[1])).each)
 
-    def set_budget_from(self, budget_from):
-        browser.all('input[class*=PriceFilterInput]').first.type(budget_from).press_enter()
-        all_given_prices = browser.all('[itemprop=priceRange]')
-
-        for i in range(len(all_given_prices)):
-            text_value = all_given_prices[i].get(query.text)
-            value = do.leave_only_digits(text_value)
-            assert value >= int(budget_from), f'Бюджет отеля {value} меньше указанного: {budget_from}'
-
-
+    def get_total_hotels_according_to_filters(self):
+        total_loc = browser.element('[class*=HotelCounter]')
+        total_number = int(do.leave_only_digits(do.extract_text(total_loc)))
+        return total_number
 
     def open_hotel_card(self):
-        browser.element('').click()
-
-
+        (browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
+         .all('[class*=HotelCardExploreButton]').first.click())

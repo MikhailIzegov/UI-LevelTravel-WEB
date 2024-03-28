@@ -14,4 +14,7 @@ def test_smoke_hotel():
     app.hotels_page.set_confirmability()  # добавить проверку, что у всех появился значок
     app.hotels_page.set_stars('5')
     app.hotels_page.set_rating('9')
+    app.hotels_page.set_budget_from('100000')
     app.hotels_page.set_regions(['Бар Дубай', 'Джебель-Али'])
+    app.hotels_page.open_hotel_card()
+    time.sleep(10)
