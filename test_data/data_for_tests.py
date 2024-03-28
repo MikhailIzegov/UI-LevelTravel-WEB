@@ -23,6 +23,7 @@ class User:
     stars: str
     rating: str
     regions: list
+    budget_from: str
 
 
 test_user = User(
@@ -36,7 +37,8 @@ test_user = User(
         end_date='028',
         stars='5',
         rating='9',
-        regions=['Бар Дубай', 'Джебель-Али']
+        regions=['Бар Дубай', 'Джебель-Али'],
+        budget_from='100000'
         )
 
 # class DataForTests:

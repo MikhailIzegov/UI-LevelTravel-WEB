@@ -8,9 +8,10 @@ from test_data.data_for_tests import test_user
 
 class MainPage:
     def open_page(self):
+        browser.config.driver.capabilities['pageLoadStrategy'] = 'eager'
         browser.open('https://level.travel')
         browser.driver.maximize_window()
-        if browser.element('[data-testid=cookies-banner]'):
+        if browser.element('[data-testid=cookies-banner]').wait_until(be.visible):
             browser.element('[data-testid=cookies-banner]').perform(command.js.remove)
 
     def open_auth_model_window(self):

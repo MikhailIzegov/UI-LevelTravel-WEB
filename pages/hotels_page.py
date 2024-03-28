@@ -19,8 +19,7 @@ class HotelsPage:
         self.set_stars(test_user.stars)
         self.set_rating(test_user.rating)
         self.set_regions(test_user.regions)
-        self.set_budget()
-        self.set_wifi_type()
+        self.set_budget_from(test_user.budget_from)
         self.open_hotel_card()
 
     def close_login_modal_window(self):
@@ -28,12 +27,16 @@ class HotelsPage:
         # Используем find_elements и проверяем, что список найденных элементов не пуст
         # if browser.driver.find_element(By.CSS_SELECTOR, "#fl-716178"):
 
-        if browser.element("#fl-716178").should(be.visible):
+        # browser.element('html').should(have.title_containing('Отели'))
+        if browser.element("#fl-716178").wait_until(be.visible):  # wait_until в отличие от should вернет True
             browser.driver.switch_to.frame(browser.driver.find_element(By.CSS_SELECTOR, "#fl-716178"))
             browser.element('.close[type=button]').click()
             browser.switch_to.default_content()
         else:
             pass
+
+        if browser.element('[data-testid=cookies-banner]').wait_until(be.visible):
+            browser.element('[data-testid=cookies-banner]').perform(command.js.remove)
 
 
         # if browser.element("#fl-716178").with_(timeout=10):
@@ -45,12 +48,14 @@ class HotelsPage:
 
 
     def set_confirmability(self):
-        (browser.element('#filter-confirmability').element(f'#\\31[class*=MultiToggleSwitch]').
-         with_(timeout=12).click())
-        all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
-        hotels_with_instant_confirmation = (
-            all_given_hotels.all('[class*=HotelCard__StyledHotelOfferCardContent] [class*=InstantConfirmIcon]'))
-        all_given_hotels.should(have.size(len(hotels_with_instant_confirmation)))
+        if browser.element('#filter-confirmability').wait_until(be.visible):
+            browser.element('#filter-confirmability').element(f'#\\31[class*=MultiToggleSwitch]').with_(timeout=12).click()
+            all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
+            hotels_with_instant_confirmation = (
+                all_given_hotels.all('[class*=HotelCard__StyledHotelOfferCardContent] [class*=InstantConfirmIcon]'))
+            all_given_hotels.should(have.size(len(hotels_with_instant_confirmation)))
+        else:
+            pass
 
 
     def set_stars(self, stars):
@@ -80,19 +85,33 @@ class HotelsPage:
         for i in range(len(all_given_ratings)):
             # Получаем value у элемента и преобразуем в float, чтобы проверить
             value = float(all_given_ratings[i].get(query.value))
-            print(value)
             assert value >= float(rating), f'Рейтинг отеля {value} меньше указанного: {rating}'
 
     def set_regions(self, regions):
         do.scroll_to('[class*=FilterLine__FilterDiv]')
         browser.element('[type=checkbox]#\\31 09028').click()
         browser.element('[type=checkbox]#\\31 09030').click()
+
+        # Считаем число отелей, которое найдется согласно фильтрам
+        region_1 = browser.element('.filter-regions').element('[class*=dSjECn]').element('[class*=StyledItemInfo]')
+        region_2 = (browser.all('[class*=StyledItemName]').element_by(have.text(regions[1])).element
+                    ('./following-sibling::div'))
+        number_1 = int(do.extract_number_of_hotels(do.extract_text(region_1)))
+        number_2 = int(do.extract_number_of_hotels(do.extract_text(region_2)))
+        summ = number_1 + number_2
+
         all_given_regions = (browser.all('[class*=HotelCard__StyledHotelOfferCardContent]').
                              all('[itemprop=addressRegion]'))
-        all_given_regions.should(have.text(regions[0]).or_(have.text(regions[1])).each)
+        all_given_regions[:summ-1].should(have.text(regions[0]).or_(have.text(regions[1])).each)
 
+    def set_budget_from(self, budget_from):
+        browser.all('input[class*=PriceFilterInput]').first.type(budget_from).press_enter()
+        all_given_prices = browser.all('[itemprop=priceRange]')
 
-    # def set_budget(self):
+        for i in range(len(all_given_prices)):
+            text_value = all_given_prices[i].get(query.text)
+            value = do.leave_only_digits(text_value)
+            assert value >= int(budget_from), f'Бюджет отеля {value} меньше указанного: {budget_from}'
 
 
 
