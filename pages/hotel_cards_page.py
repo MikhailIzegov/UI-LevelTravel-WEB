@@ -8,7 +8,7 @@ from test_data.data_for_tests import test_user
 from utils.additional_actions import do
 
 
-class HotelsPage:
+class HotelCardsPage:
 
     def __init__(self):
         self.all_hotel_cards = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
@@ -116,3 +116,7 @@ class HotelsPage:
 
     def open_hotel_card(self):
         self.all_hotel_cards.all('[class*=HotelCardExploreButton]').first.click()
+
+    def get_name_of_first_hotel_card(self):
+        return self.all_hotel_cards.all('[class*=HotelCardExploreButton]').first.get(query.text)
+
