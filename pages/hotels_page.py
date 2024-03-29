@@ -9,27 +9,26 @@ from utils.additional_actions import do
 
 
 class HotelsPage:
+
+    def __init__(self):
+        self.all_hotel_cards = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
+
     def choose_hotel(self):
         self.set_filters()
         self.open_hotel_card()
 
     def set_filters(self):
         self.close_login_modal_window()
-        self.set_confirmability()
+        self.set_confirmability()  # добавить проверку, что у всех появился значок
         self.set_stars(test_user.stars)
         self.set_rating(test_user.rating)
         self.set_budget_from(test_user.budget_from)
         self.set_regions(test_user.regions)
-        self.open_hotel_card()
 
     def close_login_modal_window(self):
-        # browser.switch_to.frame(browser.element("#fl-716178"))
-        # Используем find_elements и проверяем, что список найденных элементов не пуст
-        # if browser.driver.find_element(By.CSS_SELECTOR, "#fl-716178"):
-
-        # browser.element('html').should(have.title_containing('Отели'))
         if browser.element("#fl-716178").wait_until(be.visible):  # wait_until в отличие от should вернет True
-            browser.driver.switch_to.frame(browser.driver.find_element(By.CSS_SELECTOR, "#fl-716178"))
+            browser.driver.switch_to.frame(browser.driver.find_element(By.CSS_SELECTOR, "#fl-716178"))  # либо через
+            # селеновский locate()
             browser.element('.close[type=button]').click()
             browser.switch_to.default_content()
         else:
@@ -38,48 +37,38 @@ class HotelsPage:
         if browser.element('[data-testid=cookies-banner]').wait_until(be.visible):
             browser.element('[data-testid=cookies-banner]').perform(command.js.remove)
 
-
-        # if browser.element("#fl-716178").with_(timeout=10):
-        #     browser.driver.switch_to.frame(browser.driver.find_element(By.CSS_SELECTOR, "#fl-716178"))
-        #     browser.element('.close[type=button]').click()
-        #     browser.switch_to.default_content()
-        # else:
-        #     pass
-
-
     def set_confirmability(self):
         if browser.element('#filter-confirmability').wait_until(be.visible):
-            browser.element('#filter-confirmability').element(f'#\\31[class*=MultiToggleSwitch]').with_(timeout=12).click()
-            all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
+            (browser.element('#filter-confirmability').element(f'#\\31[class*=MultiToggleSwitch]').
+             with_(timeout=12).click())
             hotels_with_instant_confirmation = (
-                all_given_hotels.all('[class*=HotelCard__StyledHotelOfferCardContent] [class*=InstantConfirmIcon]'))
-            all_given_hotels.should(have.size(len(hotels_with_instant_confirmation)))
+                self.all_hotel_cards.all('[class*=HotelCard__StyledHotelOfferCardContent] [class*=InstantConfirmIcon]'))
+            self.all_hotel_cards.should(have.size(len(hotels_with_instant_confirmation)))
+            do.scroll_to('[class*=FilterCancellationPolicy__StyledLabelIcon]')
         else:
             pass
 
 
     def set_stars(self, stars):
-        # browser.element(f'#\\3{stars}[type=checkbox]').perform(command.js.scroll_into_view)
-        do.scroll_to('[class*=FilterCancellationPolicy__StyledLabelIcon]')
         browser.element(f'#\\3{stars}[type=checkbox]').click()
 
         # Находим все карточки отелей
-        all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent] [itemprop=ratingValue]')
+        all_given_stars_per_hotel = browser.all('[class*=HotelCard__StyledHotelOfferCardContent] [itemprop=ratingValue]')
 
         # Проверяем, что у всех найденных отелей есть искомое кол-во звезд,
         # чтобы впоследствии получить кол-во таких отелей
-        options_with_attribute = all_given_hotels.filtered_by(have.attribute('content', stars))
+        filtered_ratings = all_given_stars_per_hotel.filtered_by(have.attribute('content', stars))
 
         # Сравниваем
-        all_given_hotels.should(have.size(len(options_with_attribute)))
+        all_given_stars_per_hotel.should(have.size(len(filtered_ratings)))
 
     def set_rating(self, rating):
         do.scroll_to('.filter-meals')
         browser.all('[class*=SwitcherItem]').element_by(have.exact_text(rating + '+')).click()
-        all_given_hotels = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
-        all_given_ratings = all_given_hotels.all('[class*=HotelRating]')
 
-        all_given_hotels.should(have.size(len(all_given_ratings)))
+        all_given_ratings = self.all_hotel_cards.all('[class*=HotelRating]')
+
+        self.all_hotel_cards.should(have.size(len(all_given_ratings)))
 
         # Проверка, что рейтинг каждого отеля >= указанного рейтинга
         for i in range(len(all_given_ratings)):
@@ -117,8 +106,7 @@ class HotelsPage:
                                                                       ' с кол-вом найденных отелей')
         '''
 
-        all_given_regions = (browser.all('[class*=HotelCard__StyledHotelOfferCardContent]').
-                             all('[itemprop=addressRegion]'))
+        all_given_regions = self.all_hotel_cards.all('[itemprop=addressRegion]')
         all_given_regions[:summ-1].should(have.text(regions[0]).or_(have.text(regions[1])).each)
 
     def get_total_hotels_according_to_filters(self):
@@ -127,5 +115,4 @@ class HotelsPage:
         return total_number
 
     def open_hotel_card(self):
-        (browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
-         .all('[class*=HotelCardExploreButton]').first.click())
+        self.all_hotel_cards.all('[class*=HotelCardExploreButton]').first.click()
