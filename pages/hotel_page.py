@@ -11,9 +11,10 @@ class HotelPage:
     def choose_room(self):
         self.close_big_modal_window()
         self.compare_hotel_name()
-        self.compare_hotel_price()
+        self.compare_hotel_price_from()
         self.close_small_modal_window()
         self.compare_date_and_tourists_number()
+        self.save_room_price()
         self.pick_room()
 
     def close_big_modal_window(self):
@@ -43,7 +44,7 @@ class HotelPage:
     def compare_hotel_name(self):
         browser.element('[class*=TitleBold]').should(have.exact_text(do.get_data('hotel_name')))
 
-    def compare_hotel_price(self):
+    def compare_hotel_price_from(self):
         (browser.element('.hotel-price-badge').element('[type=button] span').should
          (have.exact_text(do.get_data('hotel_price'))))
 
@@ -58,6 +59,10 @@ class HotelPage:
         (browser.element('#end').element('[class*=DurationTripField__Value]')
          .should(have.exact_text(do.get_data('end_date'))))
 
+    def save_room_price(self):
+        (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')
+         .second.all('[class*=HotelOffers]').first.element('[class*=HotelOfferPrice__StyledPrice]').get(query.text))
+
     def pick_room(self):
         (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')
-         .second.all('[class*=HotelOffers]').second.element('[type=button]').click())
+         .second.all('[class*=HotelOffers]').first.element('[type=button]').click())
