@@ -12,8 +12,10 @@ load_env()
 
 @dataclasses.dataclass
 class User:
-    first_name: str
-    last_name: str
+    first_name_ru: str
+    last_name_ru: str
+    first_name_en: str
+    last_name_en: str
     phone_number: str
     email: str
     password: str
@@ -27,8 +29,10 @@ class User:
 
 
 test_user = User(
-        first_name='Михаил',
-        last_name='Изегов',
+        first_name_ru='Михаил',
+        last_name_ru='Изегов',
+        first_name_en='Mikhail',
+        last_name_en='Izegov',
         phone_number='0000',
         email=os.getenv('LOGIN'),
         password=os.getenv('PASSWORD'),
