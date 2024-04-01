@@ -8,6 +8,6 @@ def test_smoke_hotel():
     app.main_page.open_page()
     app.main_page.log_in()
     app.main_page.find_available_hotels()
-    app.hotel_cards_page.choose_hotel()
+    app.hcp.choose_hotel()
 
 

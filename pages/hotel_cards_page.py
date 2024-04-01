@@ -15,6 +15,7 @@ class HotelCardsPage:
 
     def choose_hotel(self):
         self.set_filters()
+        self.save_hotel_name_and_price()
         self.open_hotel_card()
 
     def set_filters(self):
@@ -44,12 +45,12 @@ class HotelCardsPage:
             hotels_with_instant_confirmation = (
                 self.all_hotel_cards.all('[class*=HotelCard__StyledHotelOfferCardContent] [class*=InstantConfirmIcon]'))
             self.all_hotel_cards.should(have.size(len(hotels_with_instant_confirmation)))
-            do.scroll_to('[class*=FilterCancellationPolicy__StyledLabelIcon]')
         else:
             pass
 
 
     def set_stars(self, stars):
+        do.scroll_to('#filter-confirmability')
         browser.element(f'#\\3{stars}[type=checkbox]').click()
 
         # Находим все карточки отелей
@@ -115,8 +116,22 @@ class HotelCardsPage:
         return total_number
 
     def open_hotel_card(self):
+        do.scroll_to('[class*=HotelCounter]')
         self.all_hotel_cards.all('[class*=HotelCardExploreButton]').first.click()
 
-    def get_name_of_first_hotel_card(self):
-        return self.all_hotel_cards.all('[class*=HotelCardExploreButton]').first.get(query.text)
+    def save_hotel_name_and_price(self):
+        self.get_name_of_first_hotel_card()
+        self.get_price_of_first_hotel_card()
 
+    def get_name_of_first_hotel_card(self):
+        global hotel_name
+        hotel_name = self.all_hotel_cards.all('[itemprop=name]').first.get(query.text)
+
+    def get_price_of_first_hotel_card(self):
+        global hotel_price
+        hotel_price = self.all_hotel_cards.all('[itemprop=priceRange]').first.get(query.text)
+
+
+# Глобальные переменные для теста:
+hotel_name = None
+hotel_price = None
