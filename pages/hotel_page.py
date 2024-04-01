@@ -12,6 +12,9 @@ class HotelPage:
         self.close_modal_window()
         self.compare_hotel_name()
         self.compare_hotel_price()
+        self.compare_date_and_tourists_number()
+        self.pick_room()
+        time.sleep(10)
 
     def close_modal_window(self):
         if browser.element("#fl-772983").wait_until(be.visible):
@@ -31,3 +34,17 @@ class HotelPage:
     def compare_hotel_price(self):
         (browser.element('.hotel-price-badge').element('[type=button] span').should
          (have.exact_text(do.get_data('hotel_price'))))
+
+    def compare_date_and_tourists_number(self):
+        (browser.element('[data-testid*=tourists-picker]').element('span')
+         .should(have.exact_text(do.get_data('tourists_number'))))
+
+        (browser.element('#start').element('[class*=DurationTripField__Value]')
+         .should(have.exact_text(do.get_data('start_date'))))
+
+        (browser.element('#end').element('[class*=DurationTripField__Value]')
+         .should(have.exact_text(do.get_data('end_date'))))
+
+    def pick_room(self):
+        (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')
+         .second.all('[class*=HotelOffers]').second.element('[type=button]').click())

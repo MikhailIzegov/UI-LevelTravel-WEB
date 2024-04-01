@@ -1,9 +1,10 @@
 import time
 
-from selene import browser, have, be, command
+from selene import browser, have, be, command, query
 
 from components.authorization import auth
 from test_data.data_for_tests import test_user
+from utils.additional_actions import do
 
 
 class MainPage:
@@ -29,12 +30,18 @@ class MainPage:
         self.unfold_tourists()
         self.decrease_tourists_number()
 
+    def date_and_tourists_number(self):
+        self.get_tourists_number()
+        self.get_start_date()
+        self.get_end_date()
+
     def find_available_hotels(self):
         self.set_number_of_tourists()
         self.choose_hotels_section()
         self.choose_destination(test_user.destination)
         self.set_start_date(test_user.start_date)
         self.set_end_date(test_user.end_date)
+        self.date_and_tourists_number()
         self.click_find_btn()
 
     def choose_hotels_section(self):
@@ -77,6 +84,18 @@ class MainPage:
         browser.element('#end').click()
         browser.element(f'[class*=datepicker__day--{end_date}][aria-disabled=false]').click()
         browser.element('#end').element('[class*=DurationTrip]').should(have.text(end_date.replace('0', '')))
+
+    def get_tourists_number(self):
+        tourists_number = browser.element('[class*=TouristsPickerdesktop__StyledLabel]').get(query.text)
+        do.set_data('tourists_number', tourists_number)
+
+    def get_start_date(self):
+        start_date = browser.element('#start').element('[class*=DurationTripField__Value]').get(query.text)
+        do.set_data('start_date', start_date)
+
+    def get_end_date(self):
+        end_date = browser.element('#end').element('[class*=DurationTripField__Value]').get(query.text)
+        do.set_data('end_date', end_date)
 
     def click_find_btn(self):
         browser.element('[type="submit"]').click()
