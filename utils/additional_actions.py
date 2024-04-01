@@ -4,6 +4,16 @@ from selene import browser, command, query
 
 
 class AdditionalActions:
+
+    def __init__(self):
+        self.shared_data = {}  # Словарь для хранения общих данных между страницами
+
+    def set_data(self, key, value):
+        self.shared_data[key] = value
+
+    def get_data(self, key):
+        return self.shared_data.get(key)
+
     def scroll_to(self, locator):
         browser.element(locator).perform(command.js.scroll_into_view)
 
