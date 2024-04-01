@@ -3,7 +3,7 @@ import re
 from selene import browser, command, query
 
 
-class Additional_Actions:
+class AdditionalActions:
     def scroll_to(self, locator):
         browser.element(locator).perform(command.js.scroll_into_view)
 
@@ -19,4 +19,4 @@ class Additional_Actions:
         return locator.get(query.text)
 
 
-do = Additional_Actions()
+do = AdditionalActions()

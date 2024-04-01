@@ -1,9 +1,11 @@
 import time
 
+import pytest
 from selene import browser, have, be, command, query
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 
+from pages.application import app
 from test_data.data_for_tests import test_user
 from utils.additional_actions import do
 
@@ -11,12 +13,14 @@ from utils.additional_actions import do
 class HotelCardsPage:
 
     def __init__(self):
+        self.app = app
         self.all_hotel_cards = browser.all('[class*=HotelCard__StyledHotelOfferCardContent]')
 
     def choose_hotel(self):
         self.set_filters()
         self.save_hotel_name_and_price()
         self.open_hotel_card()
+        browser.switch_to_next_tab()
 
     def set_filters(self):
         self.close_login_modal_window()
@@ -124,14 +128,12 @@ class HotelCardsPage:
         self.get_price_of_first_hotel_card()
 
     def get_name_of_first_hotel_card(self):
-        global hotel_name
         hotel_name = self.all_hotel_cards.all('[itemprop=name]').first.get(query.text)
+        self.app.set_data('hotel_name', hotel_name)
 
     def get_price_of_first_hotel_card(self):
-        global hotel_price
         hotel_price = self.all_hotel_cards.all('[itemprop=priceRange]').first.get(query.text)
+        self.app.set_data('hotel_price', hotel_price)
 
 
-# Глобальные переменные для теста:
-hotel_name = None
-hotel_price = None
+
