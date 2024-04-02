@@ -17,6 +17,7 @@ class HotelPage:
         self.save_room_price()
         self.save_room_name()
         self.pick_room()
+        browser.switch_to_next_tab()
 
     def close_big_modal_window(self):
         if browser.element("#fl-772983").wait_until(be.visible):
@@ -61,15 +62,17 @@ class HotelPage:
          .should(have.exact_text(do.get_data('end_date'))))
 
     def save_room_price(self):
-        (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')
-         .second
-         .all('[class*=HotelOffers]')
-         .first.element('[class*=HotelOfferPrice__StyledPrice]').get(query.text))
+        room_price = (browser.all('[class*=HotelRatesResults__StyledItemWrapper]').
+                      second.
+                      all('[class*=HotelOffers]').
+                      first.element('[class*=HotelOfferPrice__StyledPrice]').get(query.text))
+        do.set_data('room_price', room_price)
 
     def save_room_name(self):
-        (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')
-         .second
-         .element('[class*=HotelRoomName]').get(query.text))
+        room_name = (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')
+                     .second
+                     .element('[class*=HotelRoomName]').get(query.text))
+        do.set_data('room_name', room_name)
 
     def pick_room(self):
         (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')

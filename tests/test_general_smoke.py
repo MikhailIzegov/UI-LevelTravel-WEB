@@ -13,5 +13,3 @@ def test_smoke_hotel():
     app.hcp.choose_hotel()
     app.hotel_page.choose_room()
     app.checkout_page.check_info()
-
-

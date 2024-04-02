@@ -1,5 +1,6 @@
 import time
 
+import pytest
 from selene import browser, have, be, command, query
 from test_data.data_for_tests import test_user
 from utils.additional_actions import do
@@ -26,8 +27,12 @@ class CheckoutPage:
         browser.element('[class*=__RoomType-]').should(have.exact_text(do.get_data('room_name')))
 
     def compare_room_price(self):
-        (browser.element('[class*=StyledCurrencyFormat]')
-         .should(have.exact_text(do.get_data('hotel_price'))))
+        try:
+            (browser.element('[class*=StyledCurrencyFormat]')
+             .should(have.exact_text(do.get_data('room_price'))))
+        except AssertionError as e:
+            pytest.fail(f"Expected failure, but test continues. Reason: {str(e)}", pytrace=False)  # Флаг
+            # pytrace=False убирает трассировку стека для данной ошибки, делая вывод более чистым
 
     def compare_dates(self):
         parts_start_date = do.get_data('start_date').split()

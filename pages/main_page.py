@@ -30,7 +30,7 @@ class MainPage:
         self.unfold_tourists()
         self.decrease_tourists_number()
 
-    def date_and_tourists_number(self):
+    def save_date_and_tourists_number(self):
         self.get_tourists_number()
         self.get_start_date()
         self.get_end_date()
@@ -41,7 +41,7 @@ class MainPage:
         self.choose_destination(test_user.destination)
         self.set_start_date(test_user.start_date)
         self.set_end_date(test_user.end_date)
-        self.date_and_tourists_number()
+        self.save_date_and_tourists_number()
         self.click_find_btn()
 
     def choose_hotels_section(self):
