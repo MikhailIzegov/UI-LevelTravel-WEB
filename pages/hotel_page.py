@@ -15,6 +15,7 @@ class HotelPage:
         self.close_small_modal_window()
         self.compare_date_and_tourists_number()
         self.save_room_price()
+        self.save_room_name()
         self.pick_room()
 
     def close_big_modal_window(self):
@@ -61,7 +62,14 @@ class HotelPage:
 
     def save_room_price(self):
         (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')
-         .second.all('[class*=HotelOffers]').first.element('[class*=HotelOfferPrice__StyledPrice]').get(query.text))
+         .second
+         .all('[class*=HotelOffers]')
+         .first.element('[class*=HotelOfferPrice__StyledPrice]').get(query.text))
+
+    def save_room_name(self):
+        (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')
+         .second
+         .element('[class*=HotelRoomName]').get(query.text))
 
     def pick_room(self):
         (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')

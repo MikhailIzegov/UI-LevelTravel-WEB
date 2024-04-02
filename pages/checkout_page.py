@@ -8,16 +8,27 @@ from selenium.webdriver.common.by import By
 
 class CheckoutPage:
 
+    def check_info(self):
+        self.compare_hotel_name()
+        self.compare_room_name()
+        self.compare_room_price()
+        self.compare_dates()
+        self.compare_tourists_number()
+        self.fill_card_fields()
+        time.sleep(10)
+
     def compare_hotel_name(self):
         (browser.element('[class*=HotelCard__Title]')
          .element('a')
          .should(have.exact_text(do.get_data('hotel_name'))))
 
     def compare_room_name(self):
-        pass
+        browser.element('[class*=__RoomType-]').should(have.exact_text(do.get_data('room_name')))
+
     def compare_room_price(self):
         (browser.element('[class*=StyledCurrencyFormat]')
          .should(have.exact_text(do.get_data('hotel_price'))))
+
     def compare_dates(self):
         parts_start_date = do.get_data('start_date').split()
         formatted_start_date = f"{parts_start_date[0]} {parts_start_date[1][:3]}"
@@ -32,9 +43,16 @@ class CheckoutPage:
         (browser.all('[class*=StyledDateText]')
          .second
          .should(have.text(formatted_end_date)))
+
     def compare_tourists_number(self):
-        pass
+        (browser.element('[class*=StyledTouristData]')
+         .should(have.exact_text(do.get_data('tourists_number'))))
 
     def fill_card_fields(self):
-        pass
+        do.scroll_to('.checkout-discount')
 
+        browser.element('#pan').type('0' * 16)
+        browser.element('#expDate').type('1233')
+        browser.element('#cvv').type('0' * 3)
+
+        browser.element('').should(have.attribute('data-at-package-submit-order-button', 'true'))
