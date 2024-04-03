@@ -1,10 +1,7 @@
-import time
-
 import pytest
-from selene import browser, have, be, command, query
+from selene import browser, have
 from test_data.data_for_tests import test_user
 from utils.additional_actions import do
-from selenium.webdriver.common.by import By
 
 
 class CheckoutPage:
@@ -17,23 +14,26 @@ class CheckoutPage:
         self.compare_tourists_number()
         self.compare_user_data(test_user)
         self.fill_card_fields()
-        time.sleep(5)
 
     def compare_user_data(self, user):
-        browser.element('#client_data_component').all('[class*=ClientDataItem]').should(
-            have.exact_texts(
-                f'{user.first_name_ru} {user.last_name_ru}',
-                user.phone_number,
-                user.email
-            )
-        )
+        (browser.element('#client_data_component')
+            .all('[class*=ClientDataItem]')
+            .should(
+                have.exact_texts(
+                    f'{user.first_name_ru} {user.last_name_ru}',
+                    user.phone_number,
+                    user.email
+                )
+        ))
 
-        browser.element('[class*=TouristForm]').all('input').should(
-            have.values(
-                user.last_name_en,
-                user.first_name_en
-            )
-        )
+        (browser.element('[class*=TouristForm]')
+            .all('input')
+            .should(
+                have.values(
+                    user.last_name_en,
+                    user.first_name_en
+                )
+        ))
 
     def compare_hotel_name(self):
         (browser.element('[class*=HotelCard__Title]').with_(timeout=12)
@@ -43,7 +43,8 @@ class CheckoutPage:
     def compare_room_name(self):
         browser.element('[class*=__RoomType-]').should(have.exact_text(do.get_data('room_name')))
 
-    @pytest.mark.xfail(raises=AssertionError, reason='It might be a bug, see: *there should be a link to bug-report*')
+    @pytest.mark.xfail(raises=AssertionError,
+                       reason='It might be a bug, see: *there should be a link to bug-report*')
     def compare_room_price(self):
         (browser.element('[class*=StyledCurrencyFormat]')
          .should(have.exact_text(do.get_data('room_price'))))
@@ -74,5 +75,6 @@ class CheckoutPage:
         browser.element('#expDate').type('1233')
         browser.element('#cvv').type('0' * 3)
 
-        (browser.element('[class*=PaymentMethod__StyledBottom]').element('button').with_(timeout=12)
-         .should(have.attribute('data-at-package-submit-order-button', 'true')))
+        (browser.element('[class*=PaymentMethod__StyledBottom]')
+         .element('button').with_(timeout=12)
+         .should(have.attribute('data-at-package-submit-order-button').value('true')))

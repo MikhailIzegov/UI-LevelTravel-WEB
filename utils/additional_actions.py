@@ -1,6 +1,7 @@
 import re
 
 from selene import browser, command, query, be
+from selenium.webdriver.common.by import By
 
 
 class AdditionalActions:
@@ -31,6 +32,15 @@ class AdditionalActions:
     def remove_cookies_banner(self):
         if browser.element('[data-testid=cookies-banner]').wait_until(be.visible):
             browser.element('[data-testid=cookies-banner]').perform(command.js.remove)
+
+    def close_modal_window(self, locator):
+        if browser.element(locator).wait_until(be.visible):
+            browser.driver.switch_to.frame(browser.driver.find_element(By.CSS_SELECTOR, locator))  # либо через
+            # селеновский locate()
+            browser.element('[class=pc] .close[type=button]').click()
+            browser.switch_to.default_content()
+        else:
+            pass
 
 
 do = AdditionalActions()
