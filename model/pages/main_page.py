@@ -1,8 +1,6 @@
-import time
-
 from selene import browser, have, be, command, query
 
-from components.authorization import auth
+from model.components.authorization import auth
 from test_data.data_for_tests import test_user
 from utils.additional_actions import do
 

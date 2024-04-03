@@ -44,9 +44,3 @@ test_user = User(
         regions=['Бар Дубай', 'Джебель-Али'],
         budget_from='100000'
         )
-
-# class DataForTests:
-#     def __init__(self):
-#         self.login = os.getenv('LOGIN')
-#         self.password = os.getenv('PASSWORD')
-

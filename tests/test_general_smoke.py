@@ -1,9 +1,4 @@
-import time
-
-from pages.application import app
-from selene import browser
-
-from utils.additional_actions import do
+from model.application import app
 
 
 def test_smoke_hotel():
