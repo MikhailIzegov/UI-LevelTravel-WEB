@@ -12,7 +12,7 @@ class CheckoutPage:
     def check_info(self):
         self.compare_hotel_name()
         self.compare_room_name()
-        # self.compare_room_price()
+        self.compare_room_price()
         self.compare_dates()
         self.compare_tourists_number()
         self.compare_user_data(test_user)
@@ -36,20 +36,17 @@ class CheckoutPage:
         )
 
     def compare_hotel_name(self):
-        (browser.element('[class*=HotelCard__Title]')
+        (browser.element('[class*=HotelCard__Title]').with_(timeout=12)
          .element('a')
          .should(have.exact_text(do.get_data('hotel_name'))))
 
     def compare_room_name(self):
         browser.element('[class*=__RoomType-]').should(have.exact_text(do.get_data('room_name')))
 
-    # def compare_room_price(self):
-    #     try:
-    #         (browser.element('[class*=StyledCurrencyFormat]')
-    #          .should(have.exact_text(do.get_data('room_price'))))
-    #     except AssertionError as e:
-    #         pytest.fail(f"Expected failure, but test continues. Reason: {str(e)}", pytrace=False)  # Флаг pytrace=False
-    #         # убирает трассировку стека для данной ошибки, делая вывод более чистым
+    @pytest.mark.xfail(raises=AssertionError, reason='It might be a bug, see: *there should be a link to bug-report*')
+    def compare_room_price(self):
+        (browser.element('[class*=StyledCurrencyFormat]')
+         .should(have.exact_text(do.get_data('room_price'))))
 
     def compare_dates(self):
         parts_start_date = do.get_data('start_date').split()
