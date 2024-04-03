@@ -39,7 +39,7 @@ class HotelCardsPage:
             pass
 
     def set_stars(self, stars):
-        do.scroll_to('[class*=ProgressBarContainer]')
+        do.scroll_to('[class*=styles_Title]')
 
         browser.element(f'#\\3{stars}[type=checkbox]').click()
 
