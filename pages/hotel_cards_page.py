@@ -50,9 +50,8 @@ class HotelCardsPage:
         else:
             pass
 
-
     def set_stars(self, stars):
-        do.scroll_to('#filter-confirmability')
+        do.scroll_to('[class*=ProgressBarContainer]')
         browser.element(f'#\\3{stars}[type=checkbox]').click()
 
         # Находим все карточки отелей

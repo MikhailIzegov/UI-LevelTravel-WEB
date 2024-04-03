@@ -14,8 +14,8 @@ class AdditionalActions:
     def get_data(self, key):
         return self.shared_data.get(key)
 
-    def scroll_to(self, locator):
-        browser.element(locator).perform(command.js.scroll_into_view)
+    def scroll_to(self, locator, timeout=20):
+        browser.element(locator).with_(timeout=timeout).perform(command.js.scroll_into_view)
 
     def leave_only_digits(self, text_value):
         return int(''.join(re.findall(r'\d', text_value)))
