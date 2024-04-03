@@ -1,6 +1,6 @@
 import re
 
-from selene import browser, command, query
+from selene import browser, command, query, be
 
 
 class AdditionalActions:
@@ -27,6 +27,10 @@ class AdditionalActions:
 
     def extract_text(self, locator):
         return locator.get(query.text)
+
+    def remove_cookies_banner(self):
+        if browser.element('[data-testid=cookies-banner]').wait_until(be.visible):
+            browser.element('[data-testid=cookies-banner]').perform(command.js.remove)
 
 
 do = AdditionalActions()

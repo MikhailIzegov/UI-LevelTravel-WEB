@@ -37,8 +37,7 @@ class HotelCardsPage:
         else:
             pass
 
-        if browser.element('[data-testid=cookies-banner]').wait_until(be.visible):
-            browser.element('[data-testid=cookies-banner]').perform(command.js.remove)
+        do.remove_cookies_banner()
 
     def set_confirmability(self):
         if browser.element('#filter-confirmability').wait_until(be.visible):

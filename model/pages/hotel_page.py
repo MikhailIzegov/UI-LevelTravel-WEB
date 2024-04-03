@@ -28,8 +28,7 @@ class HotelPage:
         else:
             pass
 
-        if browser.element('[data-testid=cookies-banner]').wait_until(be.visible):
-            browser.element('[data-testid=cookies-banner]').perform(command.js.remove)
+        do.remove_cookies_banner()
 
     def close_small_modal_window(self):
         if browser.element("#fl-707112").wait_until(be.visible):
@@ -40,8 +39,7 @@ class HotelPage:
         else:
             pass
 
-        if browser.element('[data-testid=cookies-banner]').wait_until(be.visible):
-            browser.element('[data-testid=cookies-banner]').perform(command.js.remove)
+        do.remove_cookies_banner()
 
     def compare_hotel_name(self):
         browser.element('[class*=TitleBold]').should(have.exact_text(do.get_data('hotel_name')))

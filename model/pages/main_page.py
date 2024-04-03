@@ -1,4 +1,4 @@
-from selene import browser, have, be, command, query
+from selene import browser, have, query
 
 from model.components.authorization import auth
 from test_data.data_for_tests import test_user
@@ -7,11 +7,9 @@ from utils.additional_actions import do
 
 class MainPage:
     def open_page(self):
-        browser.config.driver.capabilities['pageLoadStrategy'] = 'eager'
         browser.open('https://level.travel')
         browser.driver.maximize_window()
-        if browser.element('[data-testid=cookies-banner]').wait_until(be.visible):
-            browser.element('[data-testid=cookies-banner]').perform(command.js.remove)
+        do.remove_cookies_banner()
 
     def open_auth_model_window(self):
         (browser.all('[class*=HeaderMenuCategory__CategoryName]').element_by
@@ -49,38 +47,27 @@ class MainPage:
         browser.element('[data-testid*=tourists-picker]').click()
 
     def decrease_tourists_number(self):
-        browser.element('[class*=CounterPluralize] > [type=button]:first-of-type').click()
+        browser.element('[class*=CounterPluralize]').all('button').first.click()
 
     def increase_tourists_number(self):
-        browser.element('[class*=CounterPluralize] > [type=button]:nth-of-type(2)').click()
+        browser.element('[class*=CounterPluralize]').all('button').second.click()
 
     def choose_destination(self, destination):
-        # browser.element('[class=lt-destination-picker__input]').type(destination)
-        # if browser.element('[class=lt-destination-picker__popularDirections]'):
         browser.element('[class=lt-destination-picker__input]').click()
+
         (browser.element('.lt-destination-picker__option[id*=option-3-0]').
          element('[class*=styles__LabelText]').should(have.text(destination)).click())
 
-        # (browser.element('[class=lt-destination-picker__popularDirections]').
-        #  element('.lt-destination-picker__option[id*=option-3-0]').click())
-
-        # if browser.element('[class=lt-destination-picker__menu-list]'):
-        #     (browser.element('.lt-destination-picker__option[id*=option-1-0]').
-        #      element('[class*=styles__LabelText]').should(have.exact_text(destination))).click()
-
-        # (browser.element('[class*=lt-destination-picker__menu]').
-        #  element('[class*=styles__LabelText]').should(have.value(destination)))
-        # browser.all('.lt-destination-picker').element_by('[id*=option-1-0]').click()
-
     def set_start_date(self, start_date):
         browser.element('#start').click()
-        # browser.element('[class*=Footer__StyledFooter]').perform(command.js.scroll_into_view)
         browser.element(f'[class*=datepicker__day--{start_date}][aria-disabled=false]').click()
+
         browser.element('#start').element('[class*=DurationTrip]').should(have.text(start_date.replace('0', '')))
 
     def set_end_date(self, end_date):
         browser.element('#end').click()
         browser.element(f'[class*=datepicker__day--{end_date}][aria-disabled=false]').click()
+
         browser.element('#end').element('[class*=DurationTrip]').should(have.text(end_date.replace('0', '')))
 
     def get_tourists_number(self):
