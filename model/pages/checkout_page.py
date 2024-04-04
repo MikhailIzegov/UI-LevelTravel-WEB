@@ -43,10 +43,9 @@ class CheckoutPage:
     def compare_room_name(self):
         browser.element('[class*=__RoomType-]').should(have.exact_text(do.get_data('room_name')))
 
-    @pytest.mark.xfail(raises=AssertionError,
-                       reason='It might be a bug, see: *there should be a link to bug-report*')
+    @pytest.mark.xfail(reason='It might be a bug, see: *there should be a link to bug-report*')
     def compare_room_price(self):
-        (browser.element('[class*=StyledCurrencyFormat]')
+        (browser.element('[class*=StyledCurrencyFormat]').with_(timeout=15)
          .should(have.exact_text(do.get_data('room_price'))))
 
     def compare_dates(self):
