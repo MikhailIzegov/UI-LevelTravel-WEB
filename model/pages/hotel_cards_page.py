@@ -1,3 +1,4 @@
+import allure
 from selene import browser, have, be, query
 
 from test_data.data_for_tests import test_user
@@ -20,11 +21,20 @@ class HotelCardsPage:
         do.close_modal_window('#fl-716178')
         do.remove_cookies_banner()
 
-        self.set_confirmability()
-        self.set_stars(test_user.stars)
-        self.set_rating(test_user.rating)
-        self.set_budget_from(test_user.budget_from)
-        self.set_regions(test_user.regions)
+        with allure.step('Мгновенное подтверждение'):
+            self.set_confirmability()
+
+        with allure.step('Кол-во звезд'):
+            self.set_stars(test_user.stars)
+
+        with allure.step('Рейтинг отеля'):
+            self.set_rating(test_user.rating)
+
+        with allure.step('Бюджет'):
+            self.set_budget_from(test_user.budget_from)
+
+        with allure.step('Регионы'):
+            self.set_regions(test_user.regions)
 
     def set_confirmability(self):
         if browser.element('#filter-confirmability').wait_until(be.visible):
