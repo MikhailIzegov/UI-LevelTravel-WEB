@@ -96,7 +96,7 @@ class HotelCardsPage:
 
         # Считаем число отелей, которое найдется согласно фильтрам
         region_1 = (browser.element('.filter-regions')
-                    .element('[class*=dSjECn]')
+                    .element('[class*=DaGfp]')
                     .element('[class*=StyledItemInfo]'))
 
         region_2 = (browser.all('[class*=StyledItemName]').element_by(have.text(regions[1])).element

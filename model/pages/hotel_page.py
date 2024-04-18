@@ -43,20 +43,20 @@ class HotelPage:
 
     def save_room_price(self):
         room_price = (browser.all('[class*=HotelRatesResults__StyledItemWrapper]').
-                      second.
+                      first.
                       all('[class*=HotelOffers]').
                       first.element('[class*=HotelOfferPrice__StyledPrice]').get(query.text))
         do.set_data('room_price', room_price)
 
     def save_room_name(self):
         room_name = (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')
-                     .second
+                     .first
                      .element('[class*=HotelRoomName]').get(query.text))
         do.set_data('room_name', room_name)
 
     def pick_room(self):
         (browser.all('[class*=HotelRatesResults__StyledItemWrapper]')
-         .second
+         .first
          .all('[class*=HotelOffers]')
          .first
          .element('[type=button]').click())
